@@ -1,0 +1,185 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#app {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar */
+nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #007bff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+nav button {
+    background-color: #0056b3;
+    color: white;
+    font-size: 16px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+}
+
+nav button:hover {
+    background-color: #003c8f;
+}
+
+nav button:active {
+    transform: scale(0.98);
+}
+
+/* Content */
+#content {
+    padding: 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Header Style */
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="number"]:focus, textarea:focus {
+    border-color: #007bff;
+}
+
+button[type="submit"] {
+    padding: 14px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Message Styles */
+#loginMessage, #registerMessage {
+    font-size: 16px;
+    color: #d9534f;
+    text-align: center;
+}
+
+/* Hospitals & Appointments List */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+li:hover {
+    background-color: #e2e6ea;
+}
+
+li h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+li p {
+    margin: 0;
+    color: #555;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #app {
+        padding: 15px;
+    }
+
+    nav {
+        flex-direction: column;
+    }
+
+    nav button {
+        margin-bottom: 10px;
+    }
+
+    form {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], button[type="submit"] {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    li {
+        padding: 12px;
+    }
+}
