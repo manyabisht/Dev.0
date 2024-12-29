@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev.0 Healthcare Management</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <nav>
+            <button onclick="showPage('login')">Login</button>
+            <button onclick="showPage('register')">Register</button>
+            <button onclick="showPage('nearbyHospitals')">Nearby Hospitals</button>
+            <button onclick="showPage('appointments')">Appointments</button>
+            <button onclick="showPage('healthRecords')">Health Records</button>
+        </nav>
+        <div id="content"></div>
+    </div>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/hospitals.js"></script>
+    <script src="js/appointments.js"></script>
+    <script src="js/healthRecords.js"></script>
+</body>
+</html>
