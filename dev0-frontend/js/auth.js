@@ -1,33 +1,26 @@
-function switchTab(tab) {
-    document.querySelectorAll('.auth-form').forEach(form => form.classList.add('hidden'));
-    document.getElementById(`${tab}-form`).classList.remove('hidden');
-    
-    document.querySelectorAll('.auth-tabs button').forEach(button => button.classList.remove('active'));
-    event.target.classList.add('active');
-}
+import API from '../services/api';
 
-async function handleLogin(event) {
-    event.preventDefault();
-    const form = event.target;
-    const email = form.querySelector('input[type="email"]').value;
-    const password = form.querySelector('input[type="password"]').value;
-
+// User Login
+export const loginUser = async (email, password) => {
     try {
-        const response = await fetch('/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-        if (data.token) {
-            localStorage.setItem('token', data.token);
-            window.location.href = 'index.html';
-        }
+        const response = await API.post('/auth/login', { email, password });
+        return response;
     } catch (error) {
-        console.error('Login error:', error);
-        alert('Login failed');
+        throw new Error(error);
     }
-}
+};
+
+// User Registration
+export const registerUser = async (email, password, firstName, lastName) => {
+    try {
+        const response = await API.post('/auth/register', {
+            email,
+            password,
+            first_name: firstName,
+            last_name: lastName,
+        });
+        return response;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
