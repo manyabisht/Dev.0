@@ -2,12 +2,20 @@ const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const morgan = require('morgan'); // Import logging library
 
 // Load environment variables
 dotenv.config();
 
 // Initialize express
 const app = express();
+
+// Middleware: Logging with Morgan
+app.use(morgan('dev'));
+
+// Middleware: CORS and JSON Parsing
+app.use(cors());
+app.use(express.json());
 
 // Initialize Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -20,10 +28,6 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
 // Test endpoint
 app.get('/test', async (req, res) => {
     try {
@@ -31,9 +35,9 @@ app.get('/test', async (req, res) => {
             .from('profiles')
             .select('*')
             .limit(1);
-            
+
         if (error) throw error;
-        
+
         res.json({ message: 'Supabase connection successful', data });
     } catch (error) {
         console.error('Error:', error);
@@ -45,15 +49,12 @@ app.get('/test', async (req, res) => {
 app.post('/auth/register', async (req, res) => {
     try {
         const { email, password, first_name, last_name } = req.body;
-        
+
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
-                data: {
-                    first_name,
-                    last_name
-                }
+                data: { first_name, last_name }
             }
         });
 
@@ -68,7 +69,7 @@ app.post('/auth/register', async (req, res) => {
 app.post('/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        
+
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -87,24 +88,33 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });
 
-// Define route to fetch nearby hospitals
+// Define route to fetch nearby hospitals with validation
 app.post('/hospitals/nearby', async (req, res) => {
     const { lat, lng, radius } = req.body;
 
+    if (!lat || !lng || !radius) {
+        return res.status(400).json({ error: 'Missing lat, lng, or radius' });
+    }
+
     try {
-        // Assuming you have a function that gets nearby hospitals based on lat, lng, and radius
         const { data, error } = await supabase.rpc('get_nearby_hospitals', {
-            lat: lat,
-            lng: lng,
-            radius_km: radius
+            lat,
+            lng,
+            radius_km: radius,
         });
 
         if (error) throw error;
-        res.json(data);  // Send the list of hospitals as a response
+        res.json(data);
     } catch (error) {
         console.error('Error fetching nearby hospitals:', error);
         res.status(500).json({ error: 'Failed to fetch hospitals' });
     }
+});
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 
 // Start server
@@ -113,7 +123,7 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Error handling
+// Error handling for unhandled promise rejections
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled promise rejection:', error);
 });
