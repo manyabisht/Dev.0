@@ -1,46 +1,85 @@
-function loadNearbyHospitalsPage(container) {
-    container.innerHTML = '<h2>Nearby Hospitals</h2><ul id="hospitalsList"></ul>';
+let map;
+let markers = [];
 
-    navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
+async function initMap() {
+    // Initialize Google Maps
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: { lat: -34.397, lng: 150.644 }
+    });
 
-        try {
-            // Make sure apiUrl is correctly defined
-            const apiUrl = "http://localhost:3000";  // Update to your actual backend URL if needed
-
-            const response = await fetch(`${apiUrl}/hospitals/nearby`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lat: latitude, lng: longitude, radius: 10 }),
-            });
-
-            // Check if the response is okay (status 200)
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+    // Get user's location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                map.setCenter(pos);
+                fetchNearbyHospitals(pos.lat, pos.lng);
+            },
+            () => {
+                handleLocationError(true);
             }
+        );
+    } else {
+        handleLocationError(false);
+    }
+}
 
-            // Check the response Content-Type to ensure it's JSON
-            const contentType = response.headers.get('Content-Type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Expected JSON response, but received something else');
-            }
+async function fetchNearbyHospitals(lat, lng) {
+    try {
+        const response = await fetch('/hospitals/nearby', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                lat: lat,
+                lng: lng,
+                radius: 10
+            })
+        });
 
-            const hospitals = await response.json();
+        const hospitals = await response.json();
+        displayHospitals(hospitals);
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('hospitals-list').innerHTML = 
+            'Error loading hospitals. Please try again.';
+    }
+}
 
-            // Check if hospitals is an array
-            if (!Array.isArray(hospitals)) {
-                throw new Error('Expected an array of hospitals');
-            }
+function displayHospitals(hospitals) {
+    // Clear existing markers
+    markers.forEach(marker => marker.setMap(null));
+    markers = [];
 
-            const list = document.getElementById('hospitalsList');
-            hospitals.forEach((hospital) => {
-                const li = document.createElement('li');
-                li.textContent = `${hospital.name} - ${hospital.address} (${hospital.distance.toFixed(2)} km)`;
-                list.appendChild(li);
-            });
-        } catch (error) {
-            container.innerHTML += `<p>Error fetching hospitals: ${error.message}</p>`;
-            console.error(error);  // Log to console for debugging
-        }
+    hospitals.forEach(hospital => {
+        // Add marker to map
+        const marker = new google.maps.Marker({
+            position: { lat: hospital.latitude, lng: hospital.longitude },
+            map: map,
+            title: hospital.name
+        });
+
+        // Add info window
+        const infoWindow = new google.maps.InfoWindow({
+            content: `
+                <div class="hospital-info">
+                    <h3>${hospital.name}</h3>
+                    <p>${hospital.address}</p>
+                    <p>Phone: ${hospital.phone}</p>
+                    <button onclick="bookAppointment('${hospital.id}')">Book Appointment</button>
+                </div>
+            `
+        });
+
+        marker.addListener('click', () => {
+            infoWindow.open(map, marker);
+        });
+
+        markers.push(marker);
     });
 }

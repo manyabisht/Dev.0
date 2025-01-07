@@ -1,19 +1,43 @@
-function loadAppointmentsPage(container) {
-    container.innerHTML = '<h2>Your Appointments</h2><ul id="appointmentsList"></ul>';
-
-    fetch(`${apiUrl}/appointments`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-    })
-        .then((response) => response.json())
-        .then((appointments) => {
-            const list = document.getElementById('appointmentsList');
-            appointments.forEach((appointment) => {
-                const li = document.createElement('li');
-                li.textContent = `${appointment.type} on ${new Date(appointment.appointment_date).toLocaleString()}`;
-                list.appendChild(li);
-            });
-        })
-        .catch((error) => {
-            container.innerHTML += `<p>Error fetching appointments: ${error.message}</p>`;
+async function loadAppointments() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch('/appointments', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
+        const appointments = await response.json();
+        displayAppointments(appointments);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function bookAppointment(event) {
+    event.preventDefault();
+    const token = localStorage.getItem('token');
+    const formData = {
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        doctor: document.getElementById('doctor').value,
+        notes: document.getElementById('notes').value
+    };
+
+    fetch('/appointments', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Appointment booked successfully!');
+        loadAppointments();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to book appointment');
+    });
 }
