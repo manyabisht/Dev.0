@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev.0 - Healthcare Management</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNTe-TfwUKRZPhvlMH9QVoqkhMPqrT4JU"></script>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f0f0; color: #00274d;">
+    <header style="background-color: #008080; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0; font-size: 28px;">Dev.0 Healthcare Management</h1>
+        <nav style="margin-top: 15px;">
+            <button onclick="openInNewTab('welcome.html')" style="background-color: #006666; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">Home</button>
+            <button onclick="openInNewTab('hospitals.html')" style="background-color: #006666; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">Nearby Hospitals</button>
+            <button onclick="openInNewTab('appointments.html')" style="background-color: #006666; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">Appointments</button>
+            <button onclick="openInNewTab('healthRecords.html')" style="background-color: #006666; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">Health Records</button>
+            <button onclick="openInNewTab('auth.html')" style="background-color: #006666; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">Login/Register</button>
+        </nav>
+    </header>
+
+    <main style="padding: 20px; max-width: 900px; margin: 30px auto; background: white; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+        <section id="welcome-section" style="text-align: center; margin-bottom: 20px;">
+            <h2 style="font-size: 24px; margin-bottom: 10px;">Welcome to Your Healthcare Hub</h2>
+            <p style="line-height: 1.6;">Access all your healthcare needs in one place, with features like hospital locator, appointments management, and health records tracking.</p>
+        </section>
+    </main>
+
+    <footer style="background-color: #00274d; color: white; text-align: center; padding: 10px; margin-top: 30px;">
+        <p>&copy; 2025 Dev.0 Healthcare Management. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Open each section in a new tab
+        function openInNewTab(fileName) {
+            window.open(fileName, '_blank');
+        }
+    </script>
+</body>
+</html>
