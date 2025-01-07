@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const cors = require('cors');
@@ -86,6 +85,26 @@ app.post('/auth/login', async (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
+});
+
+// Define route to fetch nearby hospitals
+app.post('/hospitals/nearby', async (req, res) => {
+    const { lat, lng, radius } = req.body;
+
+    try {
+        // Assuming you have a function that gets nearby hospitals based on lat, lng, and radius
+        const { data, error } = await supabase.rpc('get_nearby_hospitals', {
+            lat: lat,
+            lng: lng,
+            radius_km: radius
+        });
+
+        if (error) throw error;
+        res.json(data);  // Send the list of hospitals as a response
+    } catch (error) {
+        console.error('Error fetching nearby hospitals:', error);
+        res.status(500).json({ error: 'Failed to fetch hospitals' });
+    }
 });
 
 // Start server
